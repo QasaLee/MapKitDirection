@@ -16,13 +16,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBAction func showDirection(sender: UIButton) {
     }
     
+    let locationManager = CLLocationManager()
+    
     var restaurant:Restaurant!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Show Current location
-        mapView.showsUserLocation = true
+        locationManager.requestWhenInUseAuthorization()
+        let status = CLLocationManager.authorizationStatus()
+        if status == .authorizedWhenInUse {
+            mapView.showsUserLocation = true
+        }
         
         // Convert address to coordinate and annotate it on map
         let geoCoder = CLGeocoder()
