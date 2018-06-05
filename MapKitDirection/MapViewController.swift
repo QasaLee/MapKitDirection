@@ -13,11 +13,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
 
     @IBOutlet var mapView: MKMapView!
     
+    @IBAction func showDirection(sender: UIButton) {
+    }
+    
     var restaurant:Restaurant!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // Show Current location
+        mapView.showsUserLocation = true
+        
         // Convert address to coordinate and annotate it on map
         let geoCoder = CLGeocoder()
         geoCoder.geocodeAddressString(restaurant.location, completionHandler: { placemarks, error in
