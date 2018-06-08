@@ -33,7 +33,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 return
             }
             let route = routeResponse.routes[0]
-            self.mapView.add(route.polyline)
+//            self.mapView.add(route.polyline)
+            self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
         }
     }
     
@@ -96,6 +97,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     // MARK: - MKMapViewDelegate methods
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.green
+        renderer.lineWidth = 2.0
+        return renderer
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "MyPin"
