@@ -10,16 +10,20 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate {
+    
+    let locationManager = CLLocationManager()
+    var currentPlacemark: CLPlacemark?
+    var restaurant:Restaurant!
 
     @IBOutlet var mapView: MKMapView!
     
     @IBAction func showDirection(sender: UIButton) {
         guard let currentPlacemark = currentPlacemark else { return }
         let directionsRequest = MKDirectionsRequest()
+        
         // Start
         directionsRequest.source = MKMapItem.forCurrentLocation()
         let destinationPlacemark = MKPlacemark(placemark: currentPlacemark)
-//        let destinationPlacemark = currentPlacemark // It should work, no it won't
         directionsRequest.destination = MKMapItem(placemark: destinationPlacemark)
         directionsRequest.transportType = .automobile
         
@@ -32,24 +36,17 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
                 return
             }
+            
             let route = routeResponse.routes[0]
-//            self.mapView.add(route.polyline)
             self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
             
             let rect = route.polyline.boundingMapRect
             self.mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
         }
     }
-    
-    var currentPlacemark: CLPlacemark?
-    
-    let locationManager = CLLocationManager()
-    
-    var restaurant:Restaurant!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Show Current location
         locationManager.requestWhenInUseAuthorization()
         let status = CLLocationManager.authorizationStatus()
@@ -150,5 +147,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
         return annotationView
     }
-    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
