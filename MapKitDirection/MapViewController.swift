@@ -55,7 +55,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                     self.mapView.selectAnnotation(annotation, animated: true)
                 }
             }
-            
         })
         
         mapView.delegate = self
@@ -92,7 +91,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             
             markerAnnotationView?.glyphText = "😋"
-            markerAnnotationView?.markerTintColor = UIColor.orange
+            markerAnnotationView?.markerTintColor = UIColor.blue
         
             annotationView = markerAnnotationView
             
