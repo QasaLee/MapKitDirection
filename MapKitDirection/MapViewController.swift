@@ -14,6 +14,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet var mapView: MKMapView!
     
     @IBAction func showDirection(sender: UIButton) {
+        guard let currentPlacemark = currentPlacemark else { return }
+        let directionsRequest = MKDirectionsRequest()
+        // Start
+        directionsRequest.source = MKMapItem.forCurrentLocation()
+        let destinationPlacemark = MKPlacemark(placemark: currentPlacemark)
+//        let destinationPlacemark = currentPlacemark // It should work, no it won't
+        directionsRequest.destination = MKMapItem(placemark: destinationPlacemark)
+        directionsRequest.transportType = .automobile
+        
+        // Calculate directions
+        let directions = MKDirections(request: directionsRequest)
+        directions.calculate { (routeResponse, routeError) in
+            
+        }
     }
     
     var currentPlacemark: CLPlacemark?
@@ -43,6 +57,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let placemarks = placemarks {
                 // Get the first placemark
                 let placemark = placemarks[0]
+                self.currentPlacemark = placemark
                 
                 // Add annotation
                 let annotation = MKPointAnnotation()
