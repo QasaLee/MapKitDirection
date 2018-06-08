@@ -35,6 +35,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             let route = routeResponse.routes[0]
 //            self.mapView.add(route.polyline)
             self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
+            
+            let rect = route.polyline.boundingMapRect
+            self.mapView.setRegion(MKCoordinateRegionForMapRect(rect), animated: true)
         }
     }
     
