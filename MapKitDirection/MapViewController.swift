@@ -16,6 +16,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBAction func showDirection(sender: UIButton) {
     }
     
+    var currentPlacemark: CLPlacemark?
+    
     let locationManager = CLLocationManager()
     
     var restaurant:Restaurant!
