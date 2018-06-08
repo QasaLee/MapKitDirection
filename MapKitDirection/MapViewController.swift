@@ -26,7 +26,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Calculate directions
         let directions = MKDirections(request: directionsRequest)
         directions.calculate { (routeResponse, routeError) in
-            
+            guard let routeResponse = routeResponse else {
+                if let error = routeError {
+                    print(error)
+                }
+                return
+            }
+            let route = routeResponse.routes[0]
+            self.mapView.add(route.polyline)
         }
     }
     
