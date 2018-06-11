@@ -14,6 +14,36 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet var mapView: MKMapView!
     
     @IBAction func showDirection(sender: UIButton) {
+        // - Unwrap currentPlacemark
+        guard let currentPlacemark = currentPlacemark else { return }
+        // - directionRequest
+        let directionsRequest = MKDirectionsRequest()
+        directionsRequest.source = MKMapItem.forCurrentLocation()
+        directionsRequest.destination = MKMapItem(placemark: MKPlacemark(placemark: currentPlacemark))
+        directionsRequest.transportType = .automobile
+        // - MKDirections
+        let directions = MKDirections(request: directionsRequest)
+        // - .calculate()
+        directions.calculate { (directionsResponse, error) in
+            guard let directionsResponse = directionsResponse else {
+                if let error = error {
+                    print("Calculating directions Error: \(error)")
+                }
+                return
+            }
+            let route = directionsResponse.routes[0]
+            // MARK: - self.mapView.add()
+            // Auto-sizing
+            let rect = route.polyline.boundingMapRect
+            
+            let shrunkRect = MKMapRect(origin: rect.origin, size: MKMapSize(width: rect.size.width * 1.5, height: rect.size.height * 1.5))
+            self.mapView.setRegion(MKCoordinateRegionForMapRect(shrunkRect), animated: true)
+            
+            self.mapView.add(route.polyline, level: MKOverlayLevel.aboveRoads)
+            // .aboveLabels: label above annotation
+            // .aboveRoads: annotation above label
+        }
+        
     }
     
     let locationManager = CLLocationManager()
@@ -42,6 +72,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             if let placemarks = placemarks {
                 // Get the first placemark
                 let placemark = placemarks[0]
+                self.currentPlacemark = placemark
+            
                 
                 // Add annotation
                 let annotation = MKPointAnnotation()
@@ -72,6 +104,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     // MARK: - MKMapViewDelegate methods
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.purple
+        renderer.lineWidth = 3.0
+        return renderer
+    }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "MyPin"
