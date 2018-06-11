@@ -53,7 +53,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         
         // Show Current location
         locationManager.requestWhenInUseAuthorization()
         let status = CLLocationManager.authorizationStatus()
