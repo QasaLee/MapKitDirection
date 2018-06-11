@@ -18,8 +18,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     let locationManager = CLLocationManager()
     
-    var restaurant:Restaurant!
-
+    var restaurant: Restaurant!
+    var currentPlacemark: CLPlacemark?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
