@@ -90,6 +90,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         })
         
+            
         mapView.delegate = self
         if #available(iOS 9.0, *) {
             mapView.showsCompass = true
