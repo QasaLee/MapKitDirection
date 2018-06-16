@@ -46,14 +46,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
     }
     
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    
     let locationManager = CLLocationManager()
     
     var restaurant: Restaurant!
     var currentPlacemark: CLPlacemark?
+    var currentTransportType = MKDirectionsTransportType.automobile
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         
+        // Hide the segmentedControl for the first time it loads.
+        segmentedControl.isHidden = true
+        
         // Show Current location
         locationManager.requestWhenInUseAuthorization()
         let status = CLLocationManager.authorizationStatus()
