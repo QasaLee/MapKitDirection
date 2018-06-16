@@ -46,10 +46,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             self.mapView.removeOverlays(self.mapView.overlays)
             
             let route = directionsResponse.routes[0]
-            // MARK: - self.mapView.add()
+            self.currentRoute = route
+            
             // Auto-sizing
             let rect = route.polyline.boundingMapRect
-            
             let shrunkRect = MKMapRect(origin: rect.origin, size: MKMapSize(width: rect.size.width * 1.5, height: rect.size.height * 1.5))
             self.mapView.setRegion(MKCoordinateRegionForMapRect(shrunkRect), animated: true)
             
@@ -67,6 +67,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var restaurant: Restaurant!
     var currentPlacemark: CLPlacemark?
     var currentTransportType = MKDirectionsTransportType.automobile
+    var currentRoute: MKRoute?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -167,15 +168,30 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 pinAnnotationView?.canShowCallout = true
                 pinAnnotationView?.pinTintColor = UIColor.orange
             }
-            
             annotationView = pinAnnotationView
         }
         
         let leftIconView = UIImageView(frame: CGRect.init(x: 0, y: 0, width: 53, height: 53))
         leftIconView.image = UIImage(named: restaurant.image)
         annotationView?.leftCalloutAccessoryView = leftIconView
-            
+        
+        // Add a UIButton
+        annotationView?.rightCalloutAccessoryView = UIButton(type: UIButtonType.detailDisclosure)
+        
         return annotationView
+    }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        performSegue(withIdentifier: "showSteps", sender: view)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showSteps" {
+            let routeTableViewController = segue.destination.childViewControllers[0] as! RouteTableViewController
+            if let currentRoute = currentRoute {
+                routeTableViewController.routeSteps = currentRoute.steps
+            }
+        }
     }
     
 }

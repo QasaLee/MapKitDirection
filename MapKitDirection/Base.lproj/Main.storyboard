@@ -150,7 +150,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Steps" id="nre-rV-E9u">
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="SfZ-eO-mFN"/>
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="SfZ-eO-mFN">
+                            <connections>
+                                <action selector="done:" destination="RbC-ei-qy5" id="ioU-1O-shy"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QqW-3k-ML8" userLabel="First Responder" sceneMemberID="firstResponder"/>
