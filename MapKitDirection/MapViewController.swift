@@ -14,13 +14,25 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet var mapView: MKMapView!
     
     @IBAction func showDirection(sender: UIButton) {
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            currentTransportType = .automobile
+        case 1:
+            currentTransportType = .walking
+        default:
+            currentTransportType = .automobile
+        }
+        segmentedControl.isHidden = false
+        
         // - Unwrap currentPlacemark
         guard let currentPlacemark = currentPlacemark else { return }
+        
         // - directionRequest
         let directionsRequest = MKDirectionsRequest()
         directionsRequest.source = MKMapItem.forCurrentLocation()
         directionsRequest.destination = MKMapItem(placemark: MKPlacemark(placemark: currentPlacemark))
-        directionsRequest.transportType = .automobile
+        directionsRequest.transportType = currentTransportType
+        
         // - MKDirections
         let directions = MKDirections(request: directionsRequest)
         // - .calculate()
@@ -31,6 +43,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 }
                 return
             }
+            self.mapView.removeOverlays(self.mapView.overlays)
+            
             let route = directionsResponse.routes[0]
             // MARK: - self.mapView.add()
             // Auto-sizing
@@ -58,6 +72,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
         // Hide the segmentedControl for the first time it loads.
         segmentedControl.isHidden = true
+        //
+        segmentedControl.addTarget(self, action: #selector(showDirection(sender:)), for: .valueChanged)
         
         // Show Current location
         locationManager.requestWhenInUseAuthorization()
@@ -73,6 +89,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 print(error)
                 return
             }
+            
+            // TODO: - Show All Possible Placemarks!
             
             if let placemarks = placemarks {
                 // Get the first placemark
@@ -112,14 +130,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // MARK: - MKMapViewDelegate methods
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let renderer = MKPolylineRenderer(overlay: overlay)
-        renderer.strokeColor = UIColor.purple
+        
+        renderer.strokeColor = (currentTransportType == .automobile) ? UIColor.purple : UIColor.orange
         renderer.lineWidth = 3.0
         return renderer
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "MyPin"
-        
         if annotation.isKind(of: MKUserLocation.self) {
             return nil
         }
